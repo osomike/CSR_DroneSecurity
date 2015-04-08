@@ -1,0 +1,24 @@
+
+Starting Nmap 6.40 ( http://nmap.org ) at 2015-04-04 00:41 CEST
+Nmap scan report for 192.168.1.1
+Host is up (0.0058s latency).
+Not shown: 997 closed ports
+PORT     STATE SERVICE  VERSION
+21/tcp   open  ftp?
+|_ftp-anon: ERROR: Script execution failed (use -d to debug)
+|_ftp-bounce: no banner
+23/tcp   open  telnet?
+5555/tcp open  freeciv?
+MAC Address: 90:03:B7:FD:22:49 (Parrot)
+Device type: general purpose
+Running: Linux 2.6.X
+OS CPE: cpe:/o:linux:linux_kernel:2.6
+OS details: Linux 2.6.19 - 2.6.36
+Network Distance: 1 hop
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   5.76 ms 192.168.1.1
+
+OS and Service detection performed. Please report any incorrect results at http://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 86.07 seconds
